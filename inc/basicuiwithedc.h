@@ -16,8 +16,5 @@
 #define PACKAGE "org.example.basicuiwithedc"
 #endif
 
-#define EDJ_FILE "edje/main.edj"
-#define GRP_MAIN "main"
-
 
 #endif /* __basicuiwithedc_H__ */
