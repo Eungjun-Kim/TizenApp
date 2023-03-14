@@ -1,0 +1,154 @@
+#define PART_TOOLBAR_BTN(btn_text, part_name, part_name_to, pos)  \
+part {                                              \
+    name: part_name;                                \
+    type: RECT;                                     \
+    description {                                   \
+        state: "default" 0.0;                       \
+        color: 34 125 207 255;                      \
+        rel1 {                                      \
+            relative: pos 0.0391;                   \
+            to: part_name_to;                       \
+        }                                           \
+        rel2 {                                      \
+            relative: pos+0.5 0.15;                 \
+            to: part_name_to;                       \
+        }                                           \
+    }                                               \
+    description {                                   \
+        state: "pressed" 0.0;                       \
+        rel1.relative: pos 0.0391;                  \
+        rel2.relative: pos+0.5 0.15;                \
+        color: 13 93 166 255;                       \
+    }                                               \
+}                                                   \
+part {                                              \
+    name: part_name##"_txt";                        \
+    type: TEXT;                                     \
+    repeat_events: 1;                               \
+    description {                                   \
+        state: "default" 0.0;                       \
+        rel1 {                                      \
+            relative: 0.0 0.0;                      \
+            to: part_name;                          \
+        }                                           \
+        rel2 {                                      \
+            relative: 1.0 1.0;                      \
+            to: part_name;                          \
+        }                                           \
+        text {                                      \
+            font: "BreezeSans:style=Bold";          \
+            size: 35;                               \
+            text: btn_text;                         \
+        }                                           \
+    }                                               \
+    description {                                   \
+        state: "pressed" 0.0;                       \
+        inherit: "default" 0.0;                     \
+        text.font: "BreezeSans:style=Light";        \
+    }                                               \
+}                                                   \
+
+#define PROGRAM_TOOLBAR(source_part, selected, unselected, signal_name) \
+program {                                                               \
+	signal: "mouse,clicked,1";                                          \
+	source: source_part;                                                \
+	script {                                                            \
+		new state[256];                                                 \
+		new Float:state_num;                                            \
+		new buf[256];                                                   \
+		snprintf(buf, 256, "%s_txt", selected);                         \
+		new sel_txt = get_part_id(buf);                                 \
+		snprintf(buf, 256, "%s_txt", unselected);                       \
+		new unsel_txt = get_part_id(buf);                               \
+		get_state(PART:selected, state, 256, state_num);                \
+		if (!strncmp("default", state, 256)) {                      \
+			set_state(PART:selected, "pressed", 0.0);               \
+			set_state(PART:unselected, "default", 0.0);             \
+			set_state(sel_txt, "pressed", 0.0);                     \
+			set_state(unsel_txt, "default", 0.0);                   \
+			emit(signal_name, "");                                      \
+		}                                                               \
+	}                                                                   \
+}                      
+collections {
+    group {
+        name: "main";
+        parts {
+            part {
+                name: "background";
+                type: RECT;
+                description {
+                    state: "default" 0.0;
+                    color: 0 255 0 255;
+                    rel1 {
+                        relative: 0.0 0.0;
+                    }
+                    rel2 {
+                        relative: 1.0 1.0;
+                    }
+                }
+            }
+            part {
+                name: "main,panel";
+                type: RECT;
+                description {
+                    state: "default" 0.0;
+                    color: 0 155 0 255;
+                    rel1 {
+                        relative: 0.02 0.01;
+                        to: "background";
+                    }
+                    rel2 {
+                        relative: 1.0-0.02 1.0-0.01;
+                        to: "background";
+                    }
+                }
+            }
+            PART_TOOLBAR_BTN("Peer", "part,peer,button", "main,panel", 0.0)
+            PART_TOOLBAR_BTN("Client", "part,client,button", "main,panel", 0.5)
+            part {
+                name: "part,main,checkbox,panel";
+                type: RECT;
+                description {
+                    state: "default" 0.0;
+                    color: 0 255 255 0;
+                    rel1{
+                        relative: 0.0 0.2;
+                        to: "main,panel";
+                    }
+                    rel2{
+                        relative: 1.0 0.6;
+                        to: "main,panel";
+                    }
+                }
+            }
+            part {
+                name: "main,list,panel";
+                type: RECT;
+                description {
+                    state: "default" 0.0;
+                    color: 255 255 255 255;
+                    rel1 {
+                        relative: 0.0 0.6;
+                        to: "main,panel";
+                    }
+                    rel2 {
+                        relative: 1.0 1.0;
+                        to: "main,panel";
+                    }
+                }
+            }   
+        }
+        programs {
+            program {
+                signal: "load";
+                source: "";
+                action: STATE_SET "pressed" 0.0;
+                target: "part,peer,button";
+                target: "part,peer,button_txt";
+            }
+            PROGRAM_TOOLBAR("part,peer,button", "part,peer,button", "part,client,button", "signal,switch,peer,view")
+            PROGRAM_TOOLBAR("part,client,button", "part,client,button", "part,peer,button", "signal,switch,client,view")
+        }
+    }
+}

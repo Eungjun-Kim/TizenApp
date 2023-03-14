@@ -1,0 +1,1 @@
+res/edje/main.edj:
