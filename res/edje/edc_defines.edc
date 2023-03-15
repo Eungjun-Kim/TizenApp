@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2016 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#if !defined(_EDC_DEFINES_H_)
+#define _EDC_DEFINES_H_
+
+#define PART_RECT_BTN(btn_text, part_name, pos_1_x, pos_1_y, pos_2_x, pos_2_y) \
+part {                                                                         \
+	name: part_name;                                                           \
+	type: RECT;                                                                \
+	description {                                                              \
+		state: STATE_DEFAULT 0.0;                                              \
+		rel1.relative: pos_1_x pos_1_y;                                        \
+		rel2.relative: pos_2_x pos_2_y;                                        \
+		color: 103 70 179 255;                                                 \
+	}                                                                          \
+	description {                                                              \
+		state: STATE_PRESSED 0.0;                                              \
+		inherit: STATE_DEFAULT 0.0;                                            \
+		color: 78 53 135 255;                                                  \
+	}                                                                          \
+	description {                                                              \
+		state: STATE_INACTIVE 0.0;                                             \
+		inherit: STATE_DEFAULT 0.0;                                            \
+		color: 115 102 146 255;                                                \
+	}                                                                          \
+}                                                                              \
+part {                                                                         \
+	name: part_name##"_btn";                                                   \
+	type: TEXT;                                                                \
+	repeat_events: 1;                                                          \
+	description {                                                              \
+		state: STATE_DEFAULT 0.0;                                              \
+		rel1 {                                                                 \
+			relative: 0.0 0.0;                                                 \
+			to: part_name;                                                     \
+		}                                                                      \
+		rel2 {                                                                 \
+			relative: 1.0 1.0;                                                 \
+			to: part_name;                                                     \
+		}                                                                      \
+		text {                                                                 \
+			font: "BreezeSans:style=Light";                                    \
+			size: 26;                                                          \
+			text: btn_text;                                                    \
+		}                                                                      \
+	}                                                                          \
+}                                                                              \
+
+#define PART_IMAGE_BTN(btn_text, part_name,  pos_1_x, pos_1_y, pos_2_x, pos_2_y, image_name, image_pressed, text_x_1, text_x_2, font_size) \
+part {                                      \
+	name: part_name;                        \
+	type: RECT;                             \
+	description {                           \
+		state: STATE_DEFAULT 0.0;           \
+		rel1.relative: pos_1_x pos_1_y;     \
+		rel2.relative: 1.0 1.0;             \
+		rel2.to: part_name##"_txt";         \
+		color: 0 0 0 0;                     \
+	}                                       \
+}                                           \
+part {                                      \
+	name: part_name##"_img";                \
+	type: IMAGE;                            \
+	repeat_events: 1;                       \
+	description {                           \
+		state: STATE_DEFAULT 0.0;           \
+		rel1.relative: pos_1_x pos_1_y;     \
+		rel2.relative: pos_2_x pos_2_y;     \
+		image.normal: image_name;           \
+	}                                       \
+	description {                           \
+		state: STATE_PRESSED 0.0;           \
+		inherit: STATE_DEFAULT 0.0;         \
+		image.normal: image_pressed;        \
+	}                                       \
+}                                           \
+part {                                      \
+	name: part_name##"_txt";                \
+	type: TEXT;                             \
+	repeat_events: 1;                       \
+	description {                           \
+		state: STATE_DEFAULT 0.0;           \
+		rel1.relative: text_x_1 pos_1_y;    \
+		rel2.relative: text_x_2 pos_2_y;    \
+		color: 0 0 0 255;                   \
+		text {                              \
+			font: "BreezeSans:style=Light"; \
+			size: font_size;                \
+			align: 0.0 0.5;                 \
+			text: btn_text;                 \
+		}                                   \
+	}                                       \
+}                                           \
+
+#define PROGRAM_RADIO(signal_in, source_part, selected, unselected, signal_out) \
+program {                                                             \
+	signal: signal_in;                                                \
+	source: source_part;                                              \
+	script {                                                          \
+		new state[256];                                               \
+		new Float:state_num;                                          \
+		get_state(PART:selected, state, 256, state_num);              \
+		if (!strncmp(STATE_DEFAULT, state, 256)) {                    \
+			set_state(PART:selected, STATE_PRESSED, 0.0);             \
+			set_state(PART:unselected, STATE_DEFAULT, 0.0);           \
+			if (strlen(signal_out) > 0)                               \
+				emit(signal_out, "");                                 \
+		}                                                             \
+	}                                                                 \
+}                                                                     \
+
+#define PROGRAM_CHECK(event_signal, source_part, target, signal_checked, signal_unchecked) \
+program {                                                                                  \
+	signal: event_signal;                                                                  \
+	source: source_part;                                                                   \
+	script {                                                                               \
+		new state[256];                                                                    \
+		new Float:state_num;                                                               \
+		get_state(PART:target, state, 256, state_num);                                     \
+		if (!strncmp(STATE_DEFAULT, state, 256)) {                                         \
+			set_state(PART:target, STATE_PRESSED, 0.0);                                    \
+			if (strlen(signal_checked) > 0)                                                \
+				emit(signal_checked, "");                                                  \
+		} else {                                                                           \
+			set_state(PART:target, STATE_DEFAULT, 0.0);                                    \
+			if (strlen(signal_unchecked) > 0)                                              \
+				emit(signal_unchecked, "");                                                \
+		}                                                                                  \
+	}                                                                                      \
+}                                                                                          \
+
+#define DBG(part_name, r, g, b, a)    \
+	part {                            \
+		name, part_name##".DBG";      \
+		type, RECT;                   \
+		scale, 1;                     \
+		description {                 \
+			state, STATE_DEFAULT 0.0; \
+			rel1 {                    \
+				to, part_name;        \
+				relative, 0.0 0.0;    \
+			}                         \
+			rel2 {                    \
+				to, part_name;        \
+				relative, 1.0 1.0;    \
+			}                         \
+			color, r g b a;           \
+		}                             \
+	}                                 \
+
+#endif

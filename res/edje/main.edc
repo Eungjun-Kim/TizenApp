@@ -1,23 +1,23 @@
-#define PART_TOOLBAR_BTN(btn_text, part_name, part_name_to, pos)  \
+#include "../../inc/view_defines.h"
+#include "edc_defines.edc"
+
+#define PART_PEER_BUTTON "part,peer,button"
+#define PART_CLIENT_BUTTON "part,client,button"
+
+#define PART_TOOLBAR_BTN(btn_text, part_name, pos)  \
 part {                                              \
     name: part_name;                                \
     type: RECT;                                     \
     description {                                   \
-        state: "default" 0.0;                       \
+        state: STATE_DEFAULT 0.0;                       \
         color: 34 125 207 255;                      \
-        rel1 {                                      \
-            relative: pos 0.0391;                   \
-            to: part_name_to;                       \
-        }                                           \
-        rel2 {                                      \
-            relative: pos+0.5 0.15;                 \
-            to: part_name_to;                       \
-        }                                           \
+        rel1 {relative: pos MAIN_PREF_TOOLBAR_BUTTONS_PANEL_TOP;}                                           \
+        rel2 {relative: pos+0.5 MAIN_PREF_TOOLBAR_BUTTONS_PANEL_HEIGHT;}                                           \
     }                                               \
     description {                                   \
-        state: "pressed" 0.0;                       \
-        rel1.relative: pos 0.0391;                  \
-        rel2.relative: pos+0.5 0.15;                \
+        state: STATE_PRESSED 0.0;                       \
+        rel1.relative: pos MAIN_PREF_TOOLBAR_BUTTONS_PANEL_TOP;                  \
+        rel2.relative: pos+0.5 MAIN_PREF_TOOLBAR_BUTTONS_PANEL_HEIGHT;                \
         color: 13 93 166 255;                       \
     }                                               \
 }                                                   \
@@ -42,8 +42,8 @@ part {                                              \
         }                                           \
     }                                               \
     description {                                   \
-        state: "pressed" 0.0;                       \
-        inherit: "default" 0.0;                     \
+        state: STATE_PRESSED 0.0;                       \
+        inherit: STATE_DEFAULT 0.0;                     \
         text.font: "BreezeSans:style=Light";        \
     }                                               \
 }                                                   \
@@ -72,83 +72,47 @@ program {                                                               \
 }                      
 collections {
     group {
-        name: "main";
+        name: GROUP_MAIN;
         parts {
             part {
-                name: "background";
+                name: PART_MAIN_BACKGROUND;
                 type: RECT;
                 description {
-                    state: "default" 0.0;
-                    color: 0 255 0 255;
-                    rel1 {
-                        relative: 0.0 0.0;
-                    }
-                    rel2 {
-                        relative: 1.0 1.0;
-                    }
+                    state: STATE_DEFAULT 0.0;
+                    color: 204 204 204 204;
+                    rel1.relative: 0.0 0.0;
+                    rel2.relative: 1.0 1.0;
                 }
             }
             part {
-                name: "main,panel";
-                type: RECT;
+                name: PART_MAIN_PANEL;
+                type: SWALLOW;
                 description {
-                    state: "default" 0.0;
-                    color: 0 155 0 255;
+                    state: STATE_DEFAULT 0.0;
                     rel1 {
-                        relative: 0.02 0.01;
-                        to: "background";
+                        relative: MAIN_BACKGROUND_MARGIN_H MAIN_BACKGROUND_MARGIN_V;
+                        to: PART_MAIN_BACKGROUND;
                     }
                     rel2 {
-                        relative: 1.0-0.02 1.0-0.01;
-                        to: "background";
+                        relative: 1.0-MAIN_BACKGROUND_MARGIN_H 1.0-MAIN_BACKGROUND_MARGIN_V;
+                        to: PART_MAIN_BACKGROUND;
                     }
                 }
             }
-            PART_TOOLBAR_BTN("Peer", "part,peer,button", "main,panel", 0.0)
-            PART_TOOLBAR_BTN("Client", "part,client,button", "main,panel", 0.5)
-            part {
-                name: "part,main,checkbox,panel";
-                type: RECT;
-                description {
-                    state: "default" 0.0;
-                    color: 0 255 255 0;
-                    rel1{
-                        relative: 0.0 0.2;
-                        to: "main,panel";
-                    }
-                    rel2{
-                        relative: 1.0 0.6;
-                        to: "main,panel";
-                    }
-                }
-            }
-            part {
-                name: "main,list,panel";
-                type: RECT;
-                description {
-                    state: "default" 0.0;
-                    color: 255 255 255 255;
-                    rel1 {
-                        relative: 0.0 0.6;
-                        to: "main,panel";
-                    }
-                    rel2 {
-                        relative: 1.0 1.0;
-                        to: "main,panel";
-                    }
-                }
-            }   
+            PART_TOOLBAR_BTN("PEER", PART_PEER_BUTTON, 0.0)
+            PART_TOOLBAR_BTN("CLIENT", PART_CLIENT_BUTTON, 0.5)
+        
         }
         programs {
             program {
                 signal: "load";
                 source: "";
-                action: STATE_SET "pressed" 0.0;
-                target: "part,peer,button";
-                target: "part,peer,button_txt";
+                action: STATE_SET STATE_PRESSED 0.0;
+                target: PART_PEER_BUTTON;
+                target: PART_PEER_BUTTON"_txt";
             }
-            PROGRAM_TOOLBAR("part,peer,button", "part,peer,button", "part,client,button", "signal,switch,peer,view")
-            PROGRAM_TOOLBAR("part,client,button", "part,client,button", "part,peer,button", "signal,switch,client,view")
+            PROGRAM_TOOLBAR(PART_PEER_BUTTON, PART_PEER_BUTTON, PART_CLIENT_BUTTON, SIGNAL_SWITCH_PEER_MODE_VIEW)
+            PROGRAM_TOOLBAR(PART_CLIENT_BUTTON, PART_CLIENT_BUTTON, PART_PEER_BUTTON, SIGNAL_SWITCH_CLIENT_MODE_VIEW)
         }
     }
 }

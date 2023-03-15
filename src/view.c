@@ -3,6 +3,8 @@
 #include "basicuiwithedc.h"
 #include "view_defines.h"
 #include "view.h"
+#include "view/view_common.h"
+#include "view/view_peer.h"
 
 static struct view_info{
     Evas_Object *win;
@@ -92,9 +94,11 @@ static void _switch_view_cb(void *data, Evas_Object *obj, const char *emission, 
 	}
 
 	if (to_client_mode)
-		switch_to = view_client_mode_get();
+		return;
+		//switch_to = view_client_mode_get();
 	else
 		switch_to = view_peer_mode_get();
+
 
 	elm_layout_content_set(s_info.layout, PART_MAIN_PANEL, switch_to);
 }
