@@ -5,6 +5,7 @@
 #include "view.h"
 #include "view/view_common.h"
 #include "view/view_peer.h"
+#include "view/view_client.h"
 
 static struct view_info{
     Evas_Object *win;
@@ -49,6 +50,11 @@ Eina_Bool view_create(void *user_data){
 
     if(!view_peer_mode_create(s_info.layout)) {
         dlog_print(DLOG_ERROR, LOG_TAG, "[%s:%d] Function view_peer_mode_create() failed", __FILE__, __LINE__);
+        return EINA_FALSE;
+    }
+
+    if(!view_client_mode_create(s_info.layout)) {
+        dlog_print(DLOG_ERROR, LOG_TAG, "[%s:%d] Function view_client_mode_create() failed", __FILE__, __LINE__);
         return EINA_FALSE;
     }
     elm_layout_content_set(s_info.layout, PART_MAIN_PANEL, view_peer_mode_get());
@@ -106,8 +112,7 @@ static void _switch_view_cb(void *data, Evas_Object *obj, const char *emission, 
 	}
 
 	if (to_client_mode)
-		return;
-		//switch_to = view_client_mode_get();
+		switch_to = view_client_mode_get();
 	else
 		switch_to = view_peer_mode_get();
 
