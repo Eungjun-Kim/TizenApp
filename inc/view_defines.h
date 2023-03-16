@@ -4,6 +4,7 @@
 #define STATE_DEFAULT "default"
 #define STATE_PRESSED "pressed"
 #define STATE_INACTIVE "inactive"
+#define STATE_ACTIVE "active"
 
 #define EDJ_MAIN_FILE_NAME "edje/main.edj"
 #define EDJ_PEER_MODE_FILE_NAME "edje/peer_mode.edj"

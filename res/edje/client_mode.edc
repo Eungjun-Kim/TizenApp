@@ -1,0 +1,71 @@
+#include "../../inc/view_defines.h"
+#include "edc_defines.edc"
+
+#define PART_WRITE_BUTTON "part,write,button"
+#define PART_READ_BUTTON "part,read,button"
+
+collections {
+    group {
+        name: GROUP_CLIENT_MODE;
+        parts {
+            part {
+                name: PART_CLIENT_MODE_BACKGROUND;
+                type: RECT;
+                description {
+                    state: STATE_DEFAULT 0.0;
+                    color: 0 0 0 0;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 1.0 1.0; }
+                }
+            }
+            part {
+                name: PART_CLIENT_BUTTON_PANEL;
+                type: RECT;
+                description {
+                    state: STATE_DEFAULT 0.0;
+                    color: 204 204 204 204;
+                    rel1 {
+                        relative: 0.0 MAIN_PREF_CHECKBOX_PANEL_TOP;
+                        to: PART_CLIENT_MODE_BACKGROUND;
+                    }
+                    rel2 {
+                        relative: 1.0 MAIN_PREF_CHECKBOX_PANEL_HEIGHT;
+                        to: PART_CLIENT_MODE_BACKGROUND;
+                    }
+                }
+            }
+            PART_RECT_BTN("WRITE", PART_WRITE_BUTTON, 0.0208, 0.4, 0.4931, 0.6)
+            PART_RECT_BTN("READ", PART_READ_BUTTON, 0.5069, 0.4, 0.9792, 0.6)
+            part {
+                name: PART_MAIN_PREF_LIST_PANEL_BACKGROUND;
+                type: RECT;
+                description {
+                    state: STATE_DEFAULT 0.0;
+                    color: 0 0 0 255;
+                    rel1 {
+                        relative: 0.0 MAIN_PREF_LIST_PANEL_TOP;
+                        to: PART_CLIENT_MODE_BACKGROUND;
+                    }
+                    rel2 {
+                        relative: 1.0 1.0;
+                        to: PART_CLIENT_MODE_BACKGROUND;
+                    }
+                }
+            }
+        }
+        programs {
+            program {
+                signal: "load";
+                source: "";
+                script {
+                    set_state(PART:PART_WRITE_BUTTON, STATE_ACTIVE, 0.0);
+                    set_state(PART:PART_READ_BUTTON, STATE_ACTIVE, 0.0);
+                }
+            }
+            PROGRAM_BUTTON(PART_WRITE_BUTTON, SIGNAL_CLIENT_WRITE)
+            PROGRAM_BUTTON(PART_READ_BUTTON, SIGNAL_CLIENT_READ)
+            PROGRAM_SET_BUTTON_ACTIVITY(PART_WRITE_BUTTON, SIGNAL_CLIENT_WRITE_ON, SIGNAL_CLIENT_WRITE_OFF)
+            PROGRAM_SET_BUTTON_ACTIVITY(PART_READ_BUTTON, SIGNAL_CLIENT_READ_ON, SIGNAL_CLIENT_READ_OFF)
+        }
+    }
+}

@@ -143,6 +143,55 @@ program {                                                                       
 	}                                                                                      \
 }                                                                                          \
 
+#define PROGRAM_BUTTON(part_name, signal_name)            \
+program {                                                 \
+	signal: "mouse,down,1";                               \
+	source: part_name;                                    \
+	script {                                              \
+		new state[256];                                   \
+		new Float:state_val;                              \
+		get_state(PART:part_name, state, 256, state_val); \
+		if (!strncmp(STATE_DEFAULT, state, 256)) {        \
+			set_state(PART:part_name, STATE_PRESSED, 0.0);\
+		}                                                 \
+	}                                                     \
+}                                                         \
+program {                                                 \
+	signal: "mouse,up,1";                                 \
+	source: part_name;                                    \
+	action: STATE_SET STATE_DEFAULT 0.0;                  \
+	target: part_name;                                    \
+	script {                                              \
+		new state[256];                                   \
+		new Float:state_val;                              \
+		get_state(PART:part_name, state, 256, state_val); \
+		if (!strncmp(STATE_PRESSED, state, 256)) {        \
+			set_state(PART:part_name, STATE_DEFAULT, 0.0);\
+		}                                                 \
+	}                                                     \
+}                                                         \
+program                                                   \
+{                                                         \
+	signal: "mouse,clicked,1";                            \
+	source: part_name;                                    \
+	action: SIGNAL_EMIT signal_name "";                   \
+}                                                         \
+
+#define PROGRAM_SET_BUTTON_ACTIVITY(part_name, signal_on, signal_off) \
+program {                                                             \
+	signal: signal_on;                                                \
+	source: "";                                                       \
+	action: STATE_SET STATE_DEFAULT 0.0;                              \
+	target: part_name;                                                \
+}                                                                     \
+program {                                                             \
+	signal: signal_off;                                               \
+	source: "";                                                       \
+	action: STATE_SET STATE_INACTIVE 0.0;                             \
+	target: part_name;                                                \
+}                                                                     \
+
+
 #define DBG(part_name, r, g, b, a)    \
 	part {                            \
 		name, part_name##".DBG";      \
