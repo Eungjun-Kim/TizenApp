@@ -60,7 +60,7 @@ part {                                                                         \
 	}                                                                          \
 }                                                                              \
 
-#define PART_IMAGE_BTN(btn_text, part_name,  pos_1_x, pos_1_y, pos_2_x, pos_2_y, image_name, image_pressed, text_x_1, text_x_2, font_size) \
+#define PART_IMAGE_BTN(btn_text, part_name,  pos_1_x, pos_1_y, pos_2_x, pos_2_y, image_name, image_pressed, text_x_1, text_y_1, text_x_2, text_y_2, font_size) \
 part {                                      \
 	name: part_name;                        \
 	type: RECT;                             \
@@ -94,8 +94,8 @@ part {                                      \
 	repeat_events: 1;                       \
 	description {                           \
 		state: STATE_DEFAULT 0.0;           \
-		rel1.relative: text_x_1 pos_1_y;    \
-		rel2.relative: text_x_2 pos_2_y;    \
+		rel1.relative: text_x_1 text_y_1;    \
+		rel2.relative: text_x_2 text_y_2;    \
 		color: 0 0 0 255;                   \
 		text {                              \
 			font: "BreezeSans:style=Light"; \

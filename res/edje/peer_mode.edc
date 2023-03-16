@@ -1,0 +1,71 @@
+#include "../../inc/view_defines.h"
+#include "edc_defines.edc"
+
+#define PART_PEER_CHECK_BUTTON "part,peer,check,button"
+#define IMAGE_PEER_MODE_CHECK_ON "../res/images/peer/check_on.png"
+#define IMAGE_PEER_MODE_CHECK_OFF "../res/images/peer/check_off.png"
+
+collections {
+    images {
+        image:IMAGE_PEER_MODE_CHECK_OFF COMP;
+        image:IMAGE_PEER_MODE_CHECK_ON COMP;
+    }
+    group {
+        name: GROUP_PEER_MODE;
+        parts {
+            part {
+                name: PART_PEER_MODE_BACKGROUND;
+                type: RECT;
+                description {
+                    state: STATE_DEFAULT 0.0;
+                    color: 0 0 0 0;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 1.0 1.0; }
+                }
+            }
+            part {
+                name: PART_MAIN_PREF_CHECKBOX_PANEL;
+                type: RECT;
+                description {
+                    state: STATE_DEFAULT 0.0;
+                    color: 204 204 204 204;
+                    rel1 { 
+                        relative: 0.0 MAIN_PREF_CHECKBOX_PANEL_TOP;
+                        to: PART_PEER_MODE_BACKGROUND;
+                    }
+                    rel2 {
+                        relative: 1.0 MAIN_PREF_CHECKBOX_PANEL_HEIGHT;
+                        to: PART_PEER_MODE_BACKGROUND;
+                    }
+                }
+            }
+            PART_IMAGE_BTN("PEER MODE ON/OFF", PART_PEER_CHECK_BUTTON, 0.1, 0.4, 0.25, 0.55, IMAGE_PEER_MODE_CHECK_OFF, IMAGE_PEER_MODE_CHECK_ON, 0.27, 0.4, 1.0, 0.55, 50)
+            part {
+                name: PART_MAIN_PREF_LIST_PANEL_BACKGROUND;
+                type: RECT;
+                description {
+                    state: STATE_DEFAULT 0.0;
+                    color: 0 0 0 255;
+                    rel1 {
+                        relative: 0.0 MAIN_PREF_LIST_PANEL_TOP;
+                        to: PART_PEER_MODE_BACKGROUND;
+                    }
+                    rel2 {
+                        relative: 1.0 1.0;
+                        to: PART_PEER_MODE_BACKGROUND;
+                    }
+                }
+            }            
+        }
+        programs {
+            program {
+                signal: "load";
+                source: "";
+                script {
+                    set_state(PART: PART_PEER_CHECK_BUTTON, STATE_DEFAULT, 0.0);
+                }
+            }
+            PROGRAM_CHECK("mouse,clicked,1", PART_PEER_CHECK_BUTTON, PART_PEER_CHECK_BUTTON"_img", SIGNAL_PEER_MODE_ON, SIGNAL_PEER_MODE_OFF);
+        }
+    }
+}
