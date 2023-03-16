@@ -38,8 +38,9 @@ collections {
                         to: PART_PEER_MODE_BACKGROUND;
                     }
                 }
+                PART_IMAGE_BTN("PEER MODE ON/OFF", PART_PEER_CHECK_BUTTON, 0.1, 0.4, 0.25, 0.55, IMAGE_PEER_MODE_CHECK_OFF, IMAGE_PEER_MODE_CHECK_ON, 0.27, 0.4, 1.0, 0.55, 50)
             }
-            PART_IMAGE_BTN("PEER MODE ON/OFF", PART_PEER_CHECK_BUTTON, 0.1, 0.4, 0.25, 0.5, IMAGE_PEER_MODE_CHECK_OFF, IMAGE_PEER_MODE_CHECK_ON, 0.27, 0.4, 1.0, 0.5, 50)
+            
             part {
                 name: PART_MAIN_PREF_LIST_PANEL_BACKGROUND;
                 type: RECT;
