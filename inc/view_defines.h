@@ -24,6 +24,8 @@
 #define PART_MAIN_PREF_LIST_PANEL_BACKGROUND "part,main,pref,list,panel,background"
 #define PART_PEER_MODE_BACKGROUND "part,peer,background"
 #define PART_CLIENT_MODE_BACKGROUND "part,client,background"
+#define PART_WRITE_POPUP_SUBMIT_BUTTON "part,write,popup,submit,button"
+#define PART_WRITE_POPUP_CANCLE_BUTTON "part,write,popup,cancle,button"
 
 #define MAIN_BACKGROUND_MARGIN_H 0.02
 #define MAIN_BACKGROUND_MARGIN_V 0.01
