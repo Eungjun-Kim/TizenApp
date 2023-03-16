@@ -21,6 +21,8 @@ static struct view_info{
 static void _switch_view_cb(void *data, Evas_Object *obj, const char *emission, const char *source);
 static bool _create_scroller(void);
 static bool _create_main_view(void);
+static void _delete_win_request_cb(void *data, Evas_Object *obj, void *event_info);
+static void _back_button_clicked_cb(void *data, Evas_Object *obj, void *event_info);
 
 Eina_Bool view_create(void *user_data){
     s_info.win = view_create_win(PACKAGE);
@@ -45,6 +47,11 @@ Eina_Bool view_create(void *user_data){
         return EINA_FALSE;
     }
 
+    if(!view_peer_mode_create(s_info.layout)) {
+        dlog_print(DLOG_ERROR, LOG_TAG, "[%s:%d] Function view_peer_mode_create() failed", __FILE__, __LINE__);
+        return EINA_FALSE;
+    }
+    elm_layout_content_set(s_info.layout, PART_MAIN_PANEL, view_peer_mode_get());
     evas_object_show(s_info.win);
     return EINA_TRUE;
 }
@@ -54,6 +61,11 @@ Evas_Object *view_create_win(const char *pkg_name) {
     elm_win_conformant_set(win, EINA_TRUE);
     elm_win_indicator_mode_set(win, ELM_WIN_INDICATOR_SHOW);
     elm_win_indicator_opacity_set(win, ELM_WIN_INDICATOR_OPAQUE);
+    elm_win_autodel_set(win, EINA_TRUE);
+
+    evas_object_smart_callback_add(win, "delete,request", _delete_win_request_cb, NULL);
+    eext_object_event_callback_add(win, EEXT_CALLBACK_BACK, _back_button_clicked_cb, NULL);
+
     return win;
 }
 
@@ -131,4 +143,12 @@ static bool _create_main_view(void) {
 
 	elm_object_content_set(s_info.scroller, s_info.layout);
 	return true;
+}
+
+static void _delete_win_request_cb(void *data, Evas_Object *obj, void *event_info) {
+    ui_app_exit();
+}
+
+static void _back_button_clicked_cb(void *data, Evas_Object *obj, void *event_info) {
+    elm_win_lower(s_info.win);
 }
