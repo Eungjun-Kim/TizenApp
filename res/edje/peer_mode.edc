@@ -62,10 +62,10 @@ collections {
                 signal: "load";
                 source: "";
                 script {
-                    set_state(PART: PART_PEER_CHECK_BUTTON, STATE_DEFAULT, 0.0);
+                    set_state(PART:PART_PEER_CHECK_BUTTON, STATE_DEFAULT, 0.0)
                 }
             }
-            PROGRAM_CHECK("mouse,clicked,1", PART_PEER_CHECK_BUTTON, PART_PEER_CHECK_BUTTON"_img", SIGNAL_PEER_MODE_ON, SIGNAL_PEER_MODE_OFF);
+            PROGRAM_CHECK("mouse,clicked,1", PART_PEER_CHECK_BUTTON, PART_PEER_CHECK_BUTTON"_img", SIGNAL_PEER_MODE_ON, SIGNAL_PEER_MODE_OFF)
         }
     }
 }
